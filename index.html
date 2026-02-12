@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Update — Monthly Pulse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d; --paper: #f7f4ef; --gold: #c8a44a; --gold-light: #f0e0b0;
+    --rust: #c0442a; --teal: #1a6b6b; --teal-light: #e0f0ef;
+    --border: #d8d0c4; --muted: #888070; --white: #ffffff;
+    --shadow: 0 4px 24px rgba(13,13,13,0.10); --shadow-lg: 0 12px 48px rgba(13,13,13,0.16);
+    --radius: 12px; --radius-lg: 20px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh;
+    background-image: radial-gradient(ellipse at 80% 10%, rgba(200,164,74,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 10% 90%, rgba(26,107,107,0.10) 0%, transparent 55%);
+  }
+
+  /* Header */
+  .page-header { background: var(--ink); color: var(--white); padding: 48px 40px 40px; position: relative; overflow: hidden; }
+  .page-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent 0px, transparent 28px, rgba(200,164,74,0.06) 28px, rgba(200,164,74,0.06) 29px); }
+  .header-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--ink); font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; margin-bottom: 20px; }
+  .header-tag span { width:6px;height:6px;border-radius:50%;background:var(--ink); }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(28px,5vw,44px); font-weight: 800; line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.5px; }
+  h1 em { color: var(--gold); font-style: normal; }
+  .header-sub { font-size: 15px; color: rgba(255,255,255,0.65); font-weight: 300; max-width: 520px; line-height: 1.6; }
+  .step-pills { display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; }
+  .step-pill { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 100px; padding: 6px 14px 6px 8px; font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 400; transition: all 0.2s; cursor: pointer; }
+  .step-pill.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 600; }
+  .step-pill .num { width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:700; }
+  .step-pill.active .num { background: rgba(13,13,13,0.25); }
+  .progress-bar-wrap { background: rgba(255,255,255,0.08); border-radius: 100px; height: 4px; margin-top: 20px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 100px; width: 0%; transition: width 0.4s ease; }
+
+  /* Form */
+  .form-wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+  .form-section { background: var(--white); border-radius: var(--radius-lg); padding: 32px 32px 28px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .section-icon { width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+  .icon-gold{background:var(--gold-light)} .icon-teal{background:var(--teal-light)} .icon-rust{background:#fdecea} .icon-purple{background:#f0eeff}
+  .section-label { font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px; }
+  .section-title { font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--ink); }
+  .grid-2 { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+  @media(max-width:600px){.grid-2{grid-template-columns:1fr}.form-section{padding:24px 20px}}
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+  label { display:block;font-size:13px;font-weight:500;color:var(--ink);margin-bottom:7px; }
+  label .req { color:var(--rust);margin-left:3px; }
+  label .hint { font-size:11px;font-weight:400;color:var(--muted);margin-left:6px; }
+  input[type="text"],input[type="email"],select,textarea { width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);transition:border-color .18s,box-shadow .18s,background .18s;outline:none;appearance:none; }
+  input[type="text"]:focus,select:focus,textarea:focus { border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(26,107,107,0.10); }
+  textarea { resize:vertical;min-height:96px;line-height:1.6; }
+  select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer; }
+
+  /* Other reveal */
+  .other-reveal { display:none; margin-top:12px; animation:fadeUp 0.25s ease both; }
+  .other-reveal.visible { display:block; }
+  .other-reveal input[type="text"], .other-reveal textarea { border-color:var(--gold);background:#fffdf5; }
+  .other-reveal input[type="text"]:focus, .other-reveal textarea:focus { border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,164,74,0.15); }
+  .other-label { font-size:12px;font-weight:600;color:#a07020;display:flex;align-items:center;gap:6px;margin-bottom:7px; }
+  .other-label::before { content:'✏️'; }
+
+  /* Category cards */
+  .category-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px; }
+  .cat-card { border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 12px;cursor:pointer;transition:all .18s;text-align:center;user-select:none;background:var(--paper); }
+  .cat-card:hover { border-color:var(--teal);background:var(--teal-light); }
+  .cat-card.selected { border-color:var(--teal);background:var(--teal);color:var(--white); }
+  .cat-emoji { font-size:22px;display:block;margin-bottom:6px; }
+  .cat-name { font-size:12px;font-weight:500;line-height:1.3; }
+
+  /* Checkboxes */
+  .check-group { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+  @media(max-width:480px){.check-group{grid-template-columns:1fr}}
+  .check-item { display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .18s;user-select:none;background:var(--paper);font-size:13px; }
+  .check-item:hover { border-color:var(--gold);background:var(--gold-light); }
+  .check-item.checked { border-color:var(--gold);background:var(--gold-light);font-weight:500; }
+  .check-item input { display:none; }
+  .check-box { width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s; }
+  .check-item.checked .check-box { background:var(--gold);border-color:var(--gold); }
+  .check-item.checked .check-box::after { content:'✓';font-size:11px;color:var(--ink);font-weight:700; }
+
+  /* Radio pills */
+  .radio-group { display:flex;gap:8px;flex-wrap:wrap; }
+  .radio-pill { padding:8px 16px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;cursor:pointer;transition:all .18s;user-select:none;background:var(--paper); }
+  .radio-pill:hover { border-color:var(--teal);color:var(--teal); }
+  .radio-pill.selected { background:var(--teal);border-color:var(--teal);color:var(--white);font-weight:500; }
+
+  /* Month grid */
+  .month-grid { display:grid;grid-template-columns:repeat(6,1fr);gap:6px; }
+  @media(max-width:480px){.month-grid{grid-template-columns:repeat(4,1fr)}}
+  .month-btn { padding:9px 4px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;text-align:center;user-select:none;background:var(--paper);color:var(--ink); }
+  .month-btn:hover { border-color:var(--gold);color:var(--gold); }
+  .month-btn.selected { background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700; }
+
+  /* Submit */
+  .submit-section { background:var(--ink);border-radius:var(--radius-lg);padding:32px;text-align:center;margin-top:24px;position:relative;overflow:hidden;animation:fadeUp 0.5s 0.1s ease both; }
+  .submit-section::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 150%,rgba(200,164,74,0.2),transparent 60%); }
+  .submit-section>* { position:relative;z-index:1; }
+  .submit-title { font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:8px; }
+  .submit-sub { font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:24px; }
+  .btn-submit { display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--ink);border:none;padding:16px 40px;border-radius:100px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:0.3px; }
+  .btn-submit:hover { background:#d4b060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,164,74,0.35); }
+  .btn-submit:active { transform:translateY(0); }
+  .btn-submit:disabled { opacity:0.6;cursor:not-allowed;transform:none; }
+  .btn-arrow { font-size:18px;transition:transform .2s; }
+  .btn-submit:hover .btn-arrow { transform:translateX(4px); }
+  .spinner { width:18px;height:18px;border:2px solid rgba(13,13,13,0.3);border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite;display:none; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* Toast */
+  .toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);padding:14px 28px;border-radius:100px;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:999;white-space:nowrap; }
+  .toast.success { background:var(--teal);color:var(--white); }
+  .toast.error { background:var(--rust);color:var(--white); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  .footer-note { text-align:center;font-size:12px;color:var(--muted);margin-top:16px;padding-bottom:40px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <div class="header-tag"><span></span>Monthly Leadership Pulse</div>
+    <h1>Share Your <em>Story.</em><br>Shape Our Narrative.</h1>
+    <p class="header-sub">3 minutes to fill · Fuels our newsletter, social media, and leadership reports. Your update matters.</p>
+    <div class="step-pills">
+      <div class="step-pill active" id="pill-1"><span class="num">1</span> Who You Are</div>
+      <div class="step-pill" id="pill-2"><span class="num">2</span> Category</div>
+      <div class="step-pill" id="pill-3"><span class="num">3</span> Your Update</div>
+      <div class="step-pill" id="pill-4"><span class="num">4</span> Media & Visibility</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <form id="mainForm" novalidate>
+
+    <!-- SECTION 1 -->
+    <div class="form-section" style="animation-delay:0.05s" id="section1">
+      <div class="section-header">
+        <div class="section-icon icon-gold">👤</div>
+        <div class="section-title-group">
+          <div class="section-label">Section 1</div>
+          <div class="section-title">Who You Are</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Name & Role <span class="req">*</span></label>
+          <input type="text" name="name_role" id="nameRole" placeholder="e.g. Sarah Ahmed — GM, Gulf Region">
+        </div>
+        <div class="field">
+          <label>Department <span class="req">*</span></label>
+          <select name="department" id="deptSelect">
+            <option value="" disabled selected>Select your department…</option>
+            <option>Administration</option>
+            <option>Annex Labs</option>
+            <option>Business Development</option>
+            <option>Commex</option>
+            <option>Corporate Management</option>
+            <option>Creative and Communication</option>
+            <option>Engineering & Maintenance</option>
+            <option>Excellence</option>
+            <option>Exports</option>
+            <option>Facilities & Projects</option>
+            <option>Finance</option>
+            <option>HSE</option>
+            <option>Human Resources</option>
+            <option>IT</option>
+            <option>Internal Audit</option>
+            <option>Legal Affairs</option>
+            <option>Marketing</option>
+            <option>Medical</option>
+            <option>Medical Devices</option>
+            <option>New products / portfolio</option>
+            <option>Production</option>
+            <option>Quality Assurance</option>
+            <option>Quality Control</option>
+            <option>Regulatory & Registration</option>
+            <option>Research & Development</option>
+            <option>Sales</option>
+            <option>Sales & Distribution & Market Access</option>
+            <option>Supply Chain</option>
+            <option>Tissue Culture</option>
+            <option>Value Buying</option>
+            <option value="Other">Other…</option>
+          </select>
+          <div class="other-reveal" id="deptOtherReveal">
+            <div class="other-label">Please specify your department</div>
+            <input type="text" name="department_other" id="deptOther" placeholder="Type your department name…">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Reporting Month <span class="req">*</span></label>
+        <div class="month-grid">
+          <div class="month-btn" data-val="January">Jan</div><div class="month-btn" data-val="February">Feb</div>
+          <div class="month-btn" data-val="March">Mar</div><div class="month-btn" data-val="April">Apr</div>
+          <div class="month-btn" data-val="May">May</div><div class="month-btn" data-val="June">Jun</div>
+          <div class="month-btn" data-val="July">Jul</div><div class="month-btn" data-val="August">Aug</div>
+          <div class="month-btn" data-val="September">Sep</div><div class="month-btn" data-val="October">Oct</div>
+          <div class="month-btn" data-val="November">Nov</div><div class="month-btn" data-val="December">Dec</div>
+        </div>
+        <input type="hidden" name="reporting_month" id="reportingMonth">
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="form-section" style="animation-delay:0.1s" id="section2">
+      <div class="section-header">
+        <div class="section-icon icon-teal">🏷️</div>
+        <div class="section-title-group">
+          <div class="section-label">Section 2</div>
+          <div class="section-title">Type of Update</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Select the category that best fits your update <span class="req">*</span></label>
+        <div class="category-grid">
+          <div class="cat-card" data-val="Commercial Achievement"><span class="cat-emoji">📈</span><span class="cat-name">Commercial Achievement</span></div>
+          <div class="cat-card" data-val="Business Expansion"><span class="cat-emoji">🤝</span><span class="cat-name">Business Expansion / Partners</span></div>
+          <div class="cat-card" data-val="Product / Innovation"><span class="cat-emoji">💡</span><span class="cat-name">Product / Innovation</span></div>
+          <div class="cat-card" data-val="Operations Excellence"><span class="cat-emoji">⚙️</span><span class="cat-name">Operations Excellence</span></div>
+          <div class="cat-card" data-val="People & Culture"><span class="cat-emoji">🌱</span><span class="cat-name">People & Culture</span></div>
+          <div class="cat-card" data-val="CSR / Community"><span class="cat-emoji">💚</span><span class="cat-name">CSR / Community</span></div>
+          <div class="cat-card" data-val="Event / Conference"><span class="cat-emoji">🎯</span><span class="cat-name">Event / Conference</span></div>
+          <div class="cat-card" data-val="Marketing / Brand"><span class="cat-emoji">📣</span><span class="cat-name">Marketing / Brand</span></div>
+          <div class="cat-card" data-val="Awards / Recognition"><span class="cat-emoji">🏆</span><span class="cat-name">Awards / Recognition</span></div>
+          <div class="cat-card" data-val="Other"><span class="cat-emoji">✳️</span><span class="cat-name">Other</span></div>
+        </div>
+        <input type="hidden" name="update_category" id="updateCategory">
+        <div class="other-reveal" id="catOtherReveal">
+          <div class="other-label">Please describe your update category</div>
+          <input type="text" name="category_other" id="catOther" placeholder="e.g. Regulatory Compliance, Sustainability Initiative…">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Sub-category / Tag <span class="hint">(optional — helps us filter & search)</span></label>
+        <input type="text" name="subcategory" placeholder="e.g. Saudi Market, Q2, DEI, New Launch…">
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="form-section" style="animation-delay:0.15s" id="section3">
+      <div class="section-header">
+        <div class="section-icon icon-rust">✍️</div>
+        <div class="section-title-group">
+          <div class="section-label">Section 3</div>
+          <div class="section-title">The Update</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Headline / Title <span class="req">*</span></label>
+        <input type="text" name="headline" id="headlineInput" placeholder="e.g. Strategic Partnership Signed in Saudi Market" maxlength="100">
+        <div class="char-counter" style="text-align:right;font-size:11px;color:var(--muted);margin-top:4px"><span id="headlineCount">0</span>/100</div>
+      </div>
+      <div class="field">
+        <label>Update Summary <span class="req">*</span> <span class="hint">3–5 sentences · What happened, who was involved, why it matters</span></label>
+        <textarea name="summary" id="summaryInput" rows="5" maxlength="800" placeholder="We achieved… involving… which resulted in… This matters because…"></textarea>
+        <div class="char-counter" style="text-align:right;font-size:11px;color:var(--muted);margin-top:4px"><span id="summaryCount">0</span>/800</div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Business Impact</label>
+          <textarea name="impact" rows="3" placeholder="e.g. 15% revenue growth, expanded into 3 new cities…"></textarea>
+        </div>
+        <div class="field">
+          <label>Key Numbers / KPIs <span class="hint">(if available)</span></label>
+          <textarea name="kpis" rows="3" placeholder="e.g. +30% sales · 500 attendees · 2 new partners"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="form-section" style="animation-delay:0.2s" id="section4">
+      <div class="section-header">
+        <div class="section-icon icon-purple">📸</div>
+        <div class="section-title-group">
+          <div class="section-label">Section 4</div>
+          <div class="section-title">Media & Visibility</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Supporting Materials Available</label>
+        <div class="check-group" id="mediaGroup">
+          <label class="check-item"><input type="checkbox" name="media" value="Photos"><div class="check-box"></div>📷 Photos</label>
+          <label class="check-item"><input type="checkbox" name="media" value="Videos"><div class="check-box"></div>🎬 Videos</label>
+          <label class="check-item"><input type="checkbox" name="media" value="Presentation Slides"><div class="check-box"></div>📊 Slides</label>
+          <label class="check-item"><input type="checkbox" name="media" value="Reports / Documents"><div class="check-box"></div>📄 Reports / Docs</label>
+          <label class="check-item"><input type="checkbox" name="media" value="Press Coverage"><div class="check-box"></div>📰 Press Coverage</label>
+          <label class="check-item" id="mediaOtherItem"><input type="checkbox" name="media" value="Other"><div class="check-box"></div>✳️ Other</label>
+        </div>
+        <div class="other-reveal" id="mediaOtherReveal">
+          <div class="other-label">Describe the other materials you have</div>
+          <input type="text" name="media_other" placeholder="e.g. Infographic, Award Certificate, Poster…">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Share File Links <span class="hint">(Google Drive, OneDrive, Dropbox…)</span></label>
+        <input type="text" name="file_links" placeholder="Paste a shared link here… https://drive.google.com/…">
+      </div>
+
+      <div class="field">
+        <label>Where Can This Story Be Used? <span class="req">*</span></label>
+        <div class="check-group" id="usageGroup">
+          <label class="check-item"><input type="checkbox" name="usage" value="Internal Newsletter"><div class="check-box"></div>📬 Internal Newsletter</label>
+          <label class="check-item"><input type="checkbox" name="usage" value="LinkedIn / Social Media"><div class="check-box"></div>🔗 LinkedIn / Social</label>
+          <label class="check-item"><input type="checkbox" name="usage" value="Website / Corporate Comms"><div class="check-box"></div>🌐 Website / Comms</label>
+          <label class="check-item"><input type="checkbox" name="usage" value="Employer Branding"><div class="check-box"></div>💼 Employer Branding</label>
+          <label class="check-item"><input type="checkbox" name="usage" value="Sales Materials"><div class="check-box"></div>🗂️ Sales Materials</label>
+          <label class="check-item"><input type="checkbox" name="usage" value="Leadership Reports"><div class="check-box"></div>📋 Leadership Reports</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Confidentiality Level <span class="req">*</span></label>
+        <div class="radio-group" id="confidentialGroup">
+          <div class="radio-pill" data-val="Internal Only">🔒 Internal Only</div>
+          <div class="radio-pill" data-val="Can Be Shared Publicly">🌍 Can Be Shared Publicly</div>
+          <div class="radio-pill" data-val="Needs Review">⏳ Needs Review First</div>
+        </div>
+        <input type="hidden" name="confidentiality" id="confidentialityInput">
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-section">
+      <div class="submit-title">Ready to Submit?</div>
+      <p class="submit-sub">Your update will fuel the monthly newsletter, social content, and leadership reports.</p>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">Submit My Update</span>
+        <span class="btn-arrow" id="btnArrow">→</span>
+      </button>
+    </div>
+
+  </form>
+  <div class="footer-note">Monthly Leadership Pulse · Submissions due by the 25th of each month</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF8YyJ0siqpNeoIzH8CeZTRNfG0fXixnY707yPu6WKeD33P3sIay9U0Feu_ogyCA6QEA/exec";
+
+// Month buttons
+document.querySelectorAll('.month-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('reportingMonth').value = btn.dataset.val;
+    updateProgress();
+  });
+});
+
+// Category cards + Other reveal
+document.querySelectorAll('.cat-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const val = card.dataset.val;
+    document.getElementById('updateCategory').value = val;
+    const reveal = document.getElementById('catOtherReveal');
+    if (val === 'Other') {
+      reveal.classList.add('visible');
+      document.getElementById('catOther').focus();
+    } else {
+      reveal.classList.remove('visible');
+      document.getElementById('catOther').value = '';
+    }
+    updateProgress();
+  });
+});
+
+// Department Other reveal
+document.getElementById('deptSelect').addEventListener('change', function () {
+  const reveal = document.getElementById('deptOtherReveal');
+  if (this.value === 'Other') {
+    reveal.classList.add('visible');
+    document.getElementById('deptOther').focus();
+  } else {
+    reveal.classList.remove('visible');
+    document.getElementById('deptOther').value = '';
+  }
+  updateProgress();
+});
+
+// Media checkboxes + Other reveal
+document.querySelectorAll('#mediaGroup .check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    item.classList.toggle('checked', cb.checked);
+    const otherChecked = document.querySelector('#mediaGroup input[value="Other"]')?.closest('.check-item')?.classList.contains('checked');
+    const reveal = document.getElementById('mediaOtherReveal');
+    if (otherChecked) {
+      reveal.classList.add('visible');
+    } else {
+      reveal.classList.remove('visible');
+      const mediaOtherInput = document.querySelector('input[name="media_other"]');
+      if (mediaOtherInput) mediaOtherInput.value = '';
+    }
+    updateProgress();
+  });
+});
+
+// Usage checkboxes
+document.querySelectorAll('#usageGroup .check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    item.classList.toggle('checked', cb.checked);
+    updateProgress();
+  });
+});
+
+// Confidentiality pills
+document.querySelectorAll('#confidentialGroup .radio-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('#confidentialGroup .radio-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    document.getElementById('confidentialityInput').value = pill.dataset.val;
+    updateProgress();
+  });
+});
+
+// Step pill scroll
+[['pill-1','section1'],['pill-2','section2'],['pill-3','section3'],['pill-4','section4']].forEach(([pid, sid]) => {
+  document.getElementById(pid).addEventListener('click', () => {
+    document.getElementById(sid).scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+});
+
+// Char counters
+document.getElementById('headlineInput').addEventListener('input', function() {
+  document.getElementById('headlineCount').textContent = this.value.length;
+  updateProgress();
+});
+document.getElementById('summaryInput').addEventListener('input', function() {
+  document.getElementById('summaryCount').textContent = this.value.length;
+  updateProgress();
+});
+
+// Progress
+function updateProgress() {
+  const checks = [
+    document.getElementById('nameRole')?.value?.trim(),
+    document.getElementById('deptSelect')?.value,
+    document.getElementById('reportingMonth')?.value,
+    document.getElementById('updateCategory')?.value,
+    document.getElementById('headlineInput')?.value?.trim(),
+    document.getElementById('summaryInput')?.value?.trim(),
+    document.getElementById('confidentialityInput')?.value,
+  ];
+  const filled = checks.filter(Boolean).length;
+  document.getElementById('progressBar').style.width = Math.round((filled / checks.length) * 100) + '%';
+  const pills = document.querySelectorAll('.step-pill');
+  pills[0].classList.toggle('active', filled >= 1);
+  pills[1].classList.toggle('active', filled >= 4);
+  pills[2].classList.toggle('active', filled >= 6);
+  pills[3].classList.toggle('active', filled >= 7);
+}
+
+document.querySelectorAll('input[type="text"], select, textarea').forEach(el => {
+  el.addEventListener('input', updateProgress);
+  el.addEventListener('change', updateProgress);
+});
+
+// Toast
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+// Validation
+function validate(d) {
+  if (!d.name_role)        return 'Name & Role is required.';
+  if (!d.department)       return 'Please select a department.';
+  if (d.department === 'Other' && !d.department_other) return 'Please specify your department.';
+  if (!d.reporting_month)  return 'Please select a reporting month.';
+  if (!d.update_category)  return 'Please select an update category.';
+  if (d.update_category === 'Other' && !d.category_other) return 'Please describe your category.';
+  if (!d.headline)         return 'Headline / Title is required.';
+  if (!d.summary)          return 'Update Summary is required.';
+  if (!d.usage)            return 'Please select at least one usage option.';
+  if (!d.confidentiality)  return 'Please select a confidentiality level.';
+  return null;
+}
+
+// Collect data
+function collectData() {
+  const f = document.getElementById('mainForm');
+  const media = [...document.querySelectorAll('#mediaGroup .check-item.checked input')].map(i => i.value);
+  const usage = [...document.querySelectorAll('#usageGroup .check-item.checked input')].map(i => i.value);
+  return {
+    name_role:        f.name_role.value.trim(),
+    department:       f.department.value,
+    department_other: (f.department_other?.value || '').trim(),
+    reporting_month:  document.getElementById('reportingMonth').value,
+    update_category:  document.getElementById('updateCategory').value,
+    category_other:   (f.category_other?.value || '').trim(),
+    subcategory:      f.subcategory.value.trim(),
+    headline:         f.headline.value.trim(),
+    summary:          f.summary.value.trim(),
+    impact:           f.impact.value.trim(),
+    kpis:             f.kpis.value.trim(),
+    media:            media.join(', '),
+    media_other:      (f.media_other?.value || '').trim(),
+    file_links:       f.file_links.value.trim(),
+    usage:            usage.join(', '),
+    confidentiality:  document.getElementById('confidentialityInput').value,
+  };
+}
+
+// Reset form
+function resetForm() {
+  document.getElementById('mainForm').reset();
+  document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.check-item').forEach(c => c.classList.remove('checked'));
+  document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('selected'));
+  document.querySelectorAll('.other-reveal').forEach(r => r.classList.remove('visible'));
+  ['reportingMonth','updateCategory','confidentialityInput'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('headlineCount').textContent = '0';
+  document.getElementById('summaryCount').textContent  = '0';
+  document.getElementById('progressBar').style.width   = '0%';
+  document.querySelectorAll('.step-pill').forEach((p,i) => { if(i>0) p.classList.remove('active'); });
+}
+
+// Submit
+document.getElementById('mainForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = collectData();
+  const err  = validate(data);
+  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+
+  const btn     = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btnText');
+  const btnArrow= document.getElementById('btnArrow');
+  btn.disabled  = true; 
+  spinner.style.display = 'block';
+  btnText.textContent   = 'Sending…'; 
+  btnArrow.style.display= 'none';
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showToast('✅ Update submitted successfully! 🎉', 'success');
+      resetForm();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error(json.message || 'Server error');
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+    showToast('❌ Submission failed. Please try again or contact support.', 'error');
+  } finally {
+    btn.disabled = false; 
+    spinner.style.display  = 'none';
+    btnText.textContent    = 'Submit My Update'; 
+    btnArrow.style.display = 'inline';
+  }
+});
+</script>
+</body>
+</html>
