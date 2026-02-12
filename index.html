@@ -544,8 +544,8 @@ function resetForm() {
   document.querySelectorAll('.step-pill').forEach((p,i) => { if(i>0) p.classList.remove('active'); });
 }
 
-// Submit
-document.getElementById('mainForm').addEventListener('submit', async function(e) {
+// Submit - CORS-friendly approach using iframe
+document.getElementById('mainForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const data = collectData();
   const err  = validate(data);
@@ -560,29 +560,43 @@ document.getElementById('mainForm').addEventListener('submit', async function(e)
   btnText.textContent   = 'Sending…'; 
   btnArrow.style.display= 'none';
 
-  try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(data),
-    });
-    const json = await res.json();
-    if (json.status === 'success') {
-      showToast('✅ Update submitted successfully! 🎉', 'success');
-      resetForm();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      throw new Error(json.message || 'Server error');
-    }
-  } catch (error) {
-    console.error('Submission error:', error);
-    showToast('❌ Submission failed. Please try again or contact support.', 'error');
-  } finally {
+  // Create hidden iframe for CORS-free submission
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  // Create temporary form
+  const tempForm = document.createElement('form');
+  tempForm.method = 'POST';
+  tempForm.action = APPS_SCRIPT_URL;
+  tempForm.target = 'hidden_iframe';
+
+  // Add all data as hidden inputs
+  Object.keys(data).forEach(key => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = data[key];
+    tempForm.appendChild(input);
+  });
+
+  document.body.appendChild(tempForm);
+  tempForm.submit();
+
+  // Clean up and show success after brief delay
+  setTimeout(() => {
+    document.body.removeChild(tempForm);
+    document.body.removeChild(iframe);
+    showToast('✅ Update submitted successfully! 🎉', 'success');
+    resetForm();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     btn.disabled = false; 
     spinner.style.display  = 'none';
     btnText.textContent    = 'Submit My Update'; 
     btnArrow.style.display = 'inline';
-  }
+  }, 1500);
 });
 </script>
 </body>
