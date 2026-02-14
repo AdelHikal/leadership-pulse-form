@@ -158,6 +158,13 @@
           <input type="text" name="name_role" id="nameRole" placeholder="e.g. Sarah Ahmed — GM, Gulf Region">
         </div>
         <div class="field">
+          <label>Company Email <span class="req">*</span> <span class="hint">(for verification)</span></label>
+          <input type="email" name="email" id="emailInput" placeholder="yourname@yourcompany.com">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
           <label>Department <span class="req">*</span></label>
           <select name="department" id="deptSelect">
             <option value="" disabled selected>Select your department…</option>
@@ -354,7 +361,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUsscnqNNjUYAgy0MoRdBwF8lfJkMRqSRJ6VA4qC7wdkYweyVL5iLkU_5HS0kAzrMTKA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytKdUkrHLPSDgzDbHpP4ACn5A0HGi9yrYOuAIFigENMoDzqsCM9ElwLw69U3x5uay5Bg/exec";
 
 // Month buttons
 document.querySelectorAll('.month-btn').forEach(btn => {
@@ -458,6 +465,7 @@ document.getElementById('summaryInput').addEventListener('input', function() {
 function updateProgress() {
   const checks = [
     document.getElementById('nameRole')?.value?.trim(),
+    document.getElementById('emailInput')?.value?.trim(),
     document.getElementById('deptSelect')?.value,
     document.getElementById('reportingMonth')?.value,
     document.getElementById('updateCategory')?.value,
@@ -469,9 +477,9 @@ function updateProgress() {
   document.getElementById('progressBar').style.width = Math.round((filled / checks.length) * 100) + '%';
   const pills = document.querySelectorAll('.step-pill');
   pills[0].classList.toggle('active', filled >= 1);
-  pills[1].classList.toggle('active', filled >= 4);
-  pills[2].classList.toggle('active', filled >= 6);
-  pills[3].classList.toggle('active', filled >= 7);
+  pills[1].classList.toggle('active', filled >= 5);
+  pills[2].classList.toggle('active', filled >= 7);
+  pills[3].classList.toggle('active', filled >= 8);
 }
 
 document.querySelectorAll('input[type="text"], select, textarea').forEach(el => {
@@ -492,6 +500,8 @@ function showToast(msg, type = 'success') {
 // Validation
 function validate(d) {
   if (!d.name_role)        return 'Name & Role is required.';
+  if (!d.email)            return 'Company email is required.';
+  if (!d.email.includes('@')) return 'Please enter a valid email address.';
   if (!d.department)       return 'Please select a department.';
   if (d.department === 'Other' && !d.department_other) return 'Please specify your department.';
   if (!d.reporting_month)  return 'Please select a reporting month.';
@@ -510,6 +520,7 @@ function collectData() {
   const media = [...document.querySelectorAll('#mediaGroup .check-item.checked input')].map(i => i.value);
   const usage = [...document.querySelectorAll('#usageGroup .check-item.checked input')].map(i => i.value);
   return {
+    email:            f.email.value.trim(),
     name_role:        f.name_role.value.trim(),
     department:       f.department.value,
     department_other: (f.department_other?.value || '').trim(),
